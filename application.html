@@ -1,0 +1,514 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mudra Loan Letter - Editable Canvas</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 20px;
+            background-color: #f5f5dc;
+            font-family: Arial, sans-serif;
+        }
+        
+        .main-container {
+            display: flex;
+            gap: 20px;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+        
+        .canvas-container {
+            background: white;
+            padding: 20px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.2);
+        }
+        
+        .editor-panel {
+            width: 350px;
+            background: white;
+            padding: 20px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.2);
+            max-height: 800px;
+            overflow-y: auto;
+        }
+        
+        canvas {
+            border: 1px solid #ccc;
+            background: #f5deb3;
+        }
+        
+        .controls {
+            margin-top: 20px;
+            text-align: center;
+        }
+        
+        button {
+            background: #007bff;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            margin: 5px;
+            cursor: pointer;
+            border-radius: 4px;
+        }
+        
+        button:hover {
+            background: #0056b3;
+        }
+        
+        .form-group {
+            margin-bottom: 15px;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+            color: #333;
+        }
+        
+        .form-group input,
+        .form-group textarea {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 14px;
+            box-sizing: border-box;
+        }
+        
+        .form-group textarea {
+            height: 60px;
+            resize: vertical;
+        }
+        
+        .section-title {
+            background: #007bff;
+            color: white;
+            padding: 8px;
+            margin: 20px -20px 15px -20px;
+            font-weight: bold;
+        }
+
+        .size-controls {
+            display: flex;
+            gap: 10px;
+        }
+
+        .size-controls .form-group {
+            flex: 1;
+            margin-bottom: 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="main-container">
+        <!-- Editor Panel -->
+        <div class="editor-panel">
+            <h3>Edit Letter Content</h3>
+            
+            <div class="section-title">Watermark Settings</div>
+            <div class="form-group">
+                <label>Watermark Image URL:</label>
+                <input type="text" id="watermarkUrl" value="images/mudra.png" placeholder="Enter image URL or path">
+            </div>
+            <div class="size-controls">
+                <div class="form-group">
+                    <label>Width:</label>
+                    <input type="number" id="watermarkWidth" value="350" min="50" max="600">
+                </div>
+                <div class="form-group">
+                    <label>Height:</label>
+                    <input type="number" id="watermarkHeight" value="350" min="50" max="600">
+                </div>
+            </div>
+            <div class="form-group">
+                <label>Watermark Opacity (0-1):</label>
+                <input type="number" id="watermarkOpacity" value="0.1" min="0" max="1" step="0.1">
+            </div>
+            
+            <div class="section-title">Company Information</div>
+            <div class="form-group">
+                <label>Company Title:</label>
+                <input type="text" id="companyTitle" value="AN ISO 9001:2008 CERTIFICATES COMPANY">
+            </div>
+            
+            <div class="form-group">
+                <label>Incorporation Text:</label>
+                <textarea id="incorporationText">INCORPORATED UNDER THE NATIONAL FINANCIAL CORPORATION ACT 1956</textarea>
+            </div>
+            
+            <div class="form-group">
+                <label>Address:</label>
+                <textarea id="companyAddress">ADDRESS:- 13RD FLOOR, OFFICE NO. - 216 & 219 & 222 GOKHALE PLAZA CONDOMINIUM SURVEY NO 160/2/1A, CST. 8167, CHINCHWAD – AKURDI LINK ROAD, NEAR RAMKRISHNA MORE, AUDITORIUM, PUNE, MAHARASHTRA</textarea>
+            </div>
+            
+            <div class="section-title">Personal Details</div>
+            <div class="form-group">
+                <label>Applicant Name:</label>
+                <input type="text" id="applicantName" value="Mr/Mrs Burra Satish Kumar">
+            </div>
+            
+            <div class="form-group">
+                <label>KYC Verification:</label>
+                <input type="text" id="kycVerification" value="MUDFNC/374/243/A069">
+            </div>
+            
+            <div class="form-group">
+                <label>Loan Amount:</label>
+                <input type="text" id="loanAmount" value="1000000.00">
+            </div>
+            
+            <div class="form-group">
+                <label>Date:</label>
+                <input type="text" id="letterDate" value="02-Jul-2020">
+            </div>
+            
+            <div class="section-title">Loan Terms</div>
+            <div class="form-group">
+                <label>Loan Tenure:</label>
+                <input type="text" id="loanTenure" value="5 year">
+            </div>
+            
+            <div class="form-group">
+                <label>Monthly EMI:</label>
+                <input type="text" id="monthlyEmi" value="18872.00">
+            </div>
+            
+            <div class="form-group">
+                <label>Interest Rate:</label>
+                <input type="text" id="interestRate" value="5% P.A">
+            </div>
+            
+            <div class="form-group">
+                <label>Processing Charges:</label>
+                <input type="text" id="processingCharges" value="2500.00">
+            </div>
+            
+            <div class="section-title">Bank Details</div>
+            <div class="form-group">
+                <label>Account Name:</label>
+                <input type="text" id="accountName" value="Pardhan Mantri Mudra Loan">
+            </div>
+            
+            <div class="form-group">
+                <label>Account Number:</label>
+                <input type="text" id="accountNumber" value="31240330091">
+            </div>
+            
+            <div class="form-group">
+                <label>IFSC Code:</label>
+                <input type="text" id="ifscCode" value="SBIN0011699">
+            </div>
+            
+            <div class="form-group">
+                <label>Branch:</label>
+                <input type="text" id="branchName" value="VIMANNAGAR, PUNE">
+            </div>
+            
+            <div class="form-group">
+                <label>Branch Address:</label>
+                <textarea id="branchAddress">GIGA,SPACE,COMPLEX,AMENITY,BUILDING,VIMAN,NAGAR,PUNE</textarea>
+            </div>
+            
+            <button onclick="updateCanvas()" style="width: 100%; margin-top: 20px;">Update Letter</button>
+        </div>
+        
+        <!-- Canvas Container -->
+        <div class="canvas-container">
+            <canvas id="letterCanvas" width="794" height="1123"></canvas>
+            <div class="controls">
+                <button onclick="downloadImage()">Download as Image</button>
+                <button onclick="updateCanvas()">Refresh Canvas</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const canvas = document.getElementById('letterCanvas');
+        const ctx = canvas.getContext('2d');
+        
+        // Static images - replace URLs with your actual image paths
+        let leftLogoImg = new Image();
+        let centerLogoImg = new Image();
+        let watermarkImg = new Image();
+
+        leftLogoImg.src = 'images/emifinance.png'; // Your left logo path
+        centerLogoImg.src = 'images/mudra.png';    // Your center logo path
+        watermarkImg.src = 'images/mudra.png';     // Default watermark image
+
+        // Wait for images to load before drawing
+        let imagesLoaded = 0;
+        function imageLoaded() {
+            imagesLoaded++;
+            if (imagesLoaded === 3) {
+                updateCanvas(); // Draw canvas only after all images load
+            }
+        }
+
+        leftLogoImg.onload = imageLoaded;
+        centerLogoImg.onload = imageLoaded;
+        watermarkImg.onload = imageLoaded;
+
+        // Function to load watermark image when URL changes
+        function loadWatermarkImage() {
+            const url = document.getElementById('watermarkUrl').value;
+            if (url) {
+                const newImg = new Image();
+                newImg.onload = function() {
+                    watermarkImg = newImg;
+                    updateCanvas();
+                };
+                newImg.onerror = function() {
+                    console.log('Failed to load watermark image');
+                };
+                newImg.src = url;
+            }
+        }
+
+        // Add event listener for watermark URL changes
+        document.getElementById('watermarkUrl').addEventListener('change', loadWatermarkImage);
+        
+        function drawText(text, x, y, fontSize = 14, color = 'black', fontWeight = 'normal', textAlign = 'left') {
+            ctx.fillStyle = color;
+            ctx.font = `${fontWeight} ${fontSize}px Arial`;
+            ctx.textAlign = textAlign;
+            
+            if (text.includes('\n')) {
+                const lines = text.split('\n');
+                lines.forEach((line, index) => {
+                    ctx.fillText(line, x, y + (index * (fontSize + 4)));
+                });
+                return lines.length * (fontSize + 4);
+            } else {
+                ctx.fillText(text, x, y);
+                return fontSize + 4;
+            }
+        }
+        
+        function wrapText(text, x, y, maxWidth, lineHeight) {
+            const words = text.split(' ');
+            let line = '';
+            let currentY = y;
+            
+            for (let n = 0; n < words.length; n++) {
+                const testLine = line + words[n] + ' ';
+                const metrics = ctx.measureText(testLine);
+                const testWidth = metrics.width;
+                
+                if (testWidth > maxWidth && n > 0) {
+                    ctx.fillText(line, x, currentY);
+                    line = words[n] + ' ';
+                    currentY += lineHeight;
+                } else {
+                    line = testLine;
+                }
+            }
+            ctx.fillText(line, x, currentY);
+            return currentY + lineHeight - y;
+        }
+        
+        function drawWatermark() {
+            if (!watermarkImg.complete) return;
+            
+            const width = parseInt(document.getElementById('watermarkWidth').value);
+            const height = parseInt(document.getElementById('watermarkHeight').value);
+            const opacity = parseFloat(document.getElementById('watermarkOpacity').value);
+            
+            // Save the current context state
+            ctx.save();
+            
+            // Set opacity
+            ctx.globalAlpha = opacity;
+            
+            // Move to center of canvas
+            ctx.translate(canvas.width / 2, canvas.height / 2);
+            
+            // Rotate 45 degrees counter-clockwise (uncomment if needed)
+            // ctx.rotate(-Math.PI / 4);
+            
+            // Draw the image centered at the origin (which is now the canvas center)
+            ctx.drawImage(watermarkImg, -width/2, -height/2, width, height);
+            
+            // Restore the context to its original state
+            ctx.restore();
+        }
+        
+        function drawHeaderImages() {
+            // Left logo - fixed position and size
+            if (leftLogoImg.complete) {
+                ctx.drawImage(leftLogoImg, 50, 20, 120, 80);
+            }
+            
+            // Center logo - fixed position and size  
+            if (centerLogoImg.complete) {
+                ctx.drawImage(centerLogoImg, 280, 10, 250, 100);
+            }
+        }
+        
+        function drawHeader() {
+            // Blue underline
+            ctx.fillStyle = 'blue';
+            ctx.fillRect(50, 120, canvas.width - 100, 4);
+            
+            // Company info
+            const companyTitle = document.getElementById('companyTitle').value;
+            const incorporationText = document.getElementById('incorporationText').value;
+            const companyAddress = document.getElementById('companyAddress').value;
+            
+            drawText(companyTitle, 50, 140, 14, 'black', 'bold');
+            drawText(incorporationText, 50, 160, 12);
+            
+            // Wrap address text
+            ctx.font = '12px Arial';
+            ctx.fillStyle = 'black';
+            wrapText(companyAddress, 50, 180, canvas.width - 100, 18);
+        }
+        
+        function drawApprovalLetter() {
+            let yPos = 260;
+            
+            drawText('APPROVAL LETTER', canvas.width / 2, yPos, 18, 'black', 'bold', 'center');
+            yPos += 40;
+            
+            const applicantName = document.getElementById('applicantName').value;
+            const kycVerification = document.getElementById('kycVerification').value;
+            const loanAmount = document.getElementById('loanAmount').value;
+            const letterDate = document.getElementById('letterDate').value;
+            
+            drawText(`Name : ${applicantName}`, 50, yPos, 14);
+            yPos += 25;
+            
+            drawText(`KYC Verification : ${kycVerification}`, 50, yPos, 14);
+            yPos += 25;
+            
+            drawText('Subject : Approval For Personal Loan', 50, yPos, 14, 'red', 'bold');
+            yPos += 25;
+            
+            drawText(`Loan Amount : ${loanAmount}/-`, 50, yPos, 14);
+            yPos += 25;
+            
+            drawText(`Date : ${letterDate}`, canvas.width - 200, 330, 14, 'black', 'bold');
+        }
+        
+        function drawLoanContent() {
+            let yPos = 420;
+            
+            const applicantName = document.getElementById('applicantName').value;
+            const loanTenure = document.getElementById('loanTenure').value;
+            const monthlyEmi = document.getElementById('monthlyEmi').value;
+            const interestRate = document.getElementById('interestRate').value;
+            const processingCharges = document.getElementById('processingCharges').value;
+            const loanAmount = document.getElementById('loanAmount').value;
+            
+            drawText(`Dear ${applicantName}`, 50, yPos, 14, 'black', 'bold');
+            yPos += 30;
+            
+            ctx.font = '14px Arial';
+            ctx.fillStyle = 'black';
+            const line1 = `We are sending you this letter to confirm your loan has been approved by `;
+            const line1Width = ctx.measureText(line1).width;
+            ctx.fillText(line1, 50, yPos);
+            
+            ctx.fillStyle = 'green';
+            ctx.font = 'bold 14px Arial';
+            const mudraText = 'Pardhan Mantri Mudra Loan';
+            const mudraWidth = ctx.measureText(mudraText).width;
+            ctx.fillText(mudraText, 50 + line1Width, yPos);
+            
+            ctx.fillStyle = 'black';
+            ctx.font = '14px Arial';
+            ctx.fillText(` for ${loanTenure}.`, 50 + line1Width + mudraWidth, yPos);
+            yPos += 30;
+            
+            drawText(`${loanTenure} Monthly EMI Rs ${monthlyEmi}/- at ${interestRate} Reducing Rate Of Interest`, 50, yPos, 14, 'green', 'bold');
+            yPos += 20;
+            drawText('through N.R.I funding Scheme.', 50, yPos, 14, 'green', 'bold');
+            yPos += 40;
+            
+            // Long paragraph with word wrapping
+            ctx.font = '14px Arial';
+            ctx.fillStyle = 'black';
+            const longText = `When You Submit your amount for Processing Charges Fee Rs ${processingCharges}/- its company responsibility to handover your loan Amount Rs ${loanAmount}/- and our team will visit to your place shortly.`;
+            const wrapHeight = wrapText(longText, 50, yPos, canvas.width - 100, 20);
+            yPos += wrapHeight + 20;
+            
+            drawText('Please Continue Your Loan Process Without any Hesitation.', 50, yPos, 14, 'black', 'bold');
+            yPos += 25;
+            
+            drawText(`Loan Processing Charge :- ${processingCharges}/-`, 50, yPos, 14, 'red', 'bold');
+        }
+        
+        function drawPaymentDetails() {
+            let yPos = 710;
+            
+            const accountName = document.getElementById('accountName').value;
+            const accountNumber = document.getElementById('accountNumber').value;
+            const ifscCode = document.getElementById('ifscCode').value;
+            const branchName = document.getElementById('branchName').value;
+            const branchAddress = document.getElementById('branchAddress').value;
+            
+            drawText('Payment This Account :-', 50, yPos, 16, 'black', 'bold');
+            yPos += 30;
+            
+            drawText(`Name : ${accountName}`, 50, yPos, 14, 'black', 'bold');
+            yPos += 25;
+            
+            drawText(`A/c : ${accountNumber}`, 50, yPos, 14, 'black', 'bold');
+            yPos += 25;
+            
+            drawText(`Ifsc Code : ${ifscCode}`, 50, yPos, 14, 'black', 'bold');
+            yPos += 25;
+            
+            drawText(`Branch : ${branchName}`, 50, yPos, 14, 'black', 'bold');
+            yPos += 25;
+            
+            drawText(`Branch Address : ${branchAddress}`, 50, yPos, 14, 'black', 'bold');
+        }
+        
+        function drawBarcodeArea() {
+            ctx.fillStyle = 'black';
+            for (let i = 0; i < 20; i++) {
+                const width = Math.random() < 0.5 ? 2 : 4;
+                ctx.fillRect(canvas.width - 200 + (i * 8), 370, width, 40);
+            }
+        }
+        
+        function updateCanvas() {
+            // Clear canvas
+            ctx.fillStyle = '#f5deb3';
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+            
+            // Draw all elements
+            drawWatermark();
+            drawHeaderImages();
+            drawHeader();
+            drawApprovalLetter();
+            drawLoanContent();
+            drawPaymentDetails();
+            drawBarcodeArea();
+        }
+        
+        function downloadImage() {
+            const link = document.createElement('a');
+            link.download = 'mudra_loan_letter.png';
+            link.href = canvas.toDataURL();
+            link.click();
+        }
+        
+        // Auto-update canvas when form fields change
+        document.querySelectorAll('input, textarea').forEach(element => {
+            element.addEventListener('input', updateCanvas);
+        });
+        
+        // Initial canvas generation - only if images are already loaded
+        setTimeout(() => {
+            if (leftLogoImg.complete && centerLogoImg.complete && watermarkImg.complete) {
+                updateCanvas();
+            }
+        }, 100);
+    </script>
+</body>
+</html>
