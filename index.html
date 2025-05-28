@@ -26440,6 +26440,24 @@
 									></div>
 								</div>
 
+								<!-- Loading Spinner -->
+<!-- Loading Spinner Overlay -->
+<div id="loadingSpinner" style="
+  display: none;
+  position: fixed;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  background: rgba(0,0,0,0.5);
+  z-index: 1050;
+  justify-content: center;
+  align-items: center;
+">
+  <div class="spinner-border text-light" role="status" style="width: 3rem; height: 3rem;">
+    <span class="sr-only">Loading...</span>
+  </div>
+</div>
+
+
 <!-- First Modal: Loan Approved -->
 <div class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
   <div class="modal-dialog modal-dialog-centered" role="document">
@@ -26499,22 +26517,36 @@
 
 
 								<div class="flex flex-row w-full items-center justify-end">
-									<button
-									
-												data-toggle="modal"
-												data-target="#exampleModalCenter"
-										class="text-white rounded-md p-2 mx-4 shadow-sm w-full flex items-center justify-center bg-primaryColor/[0.6]"
-										name="sky-button"
-									>
-										<div class="flex flex-row items-center" >
-											<span
-												class="font-semibold text-sm"
-												style="cursor: pointer"
-											>
-												Check
-											</span>
-										</div>
-									</button>
+<button id="checkButton" class="text-white rounded-md p-2 mx-4 shadow-sm w-full flex items-center justify-center bg-primaryColor/[0.6]" name="sky-button">
+  <div class="flex flex-row items-center">
+    <span class="font-semibold text-sm" style="cursor: pointer">
+      Check
+    </span>
+  </div>
+</button>
+
+<script>
+  const checkButton = document.getElementById('checkButton');
+  const spinner = document.getElementById('loadingSpinner');
+  const modalEl = document.getElementById('exampleModalCenter');
+
+  checkButton.addEventListener('click', () => {
+    // Show spinner
+    spinner.style.display = 'flex';
+
+    // Wait 2 seconds
+    setTimeout(() => {
+      spinner.style.display = 'none';
+
+      // Show Bootstrap modal
+      const modal = new bootstrap.Modal(modalEl);
+      modal.show();
+    }, 2000);
+  });
+</script>
+
+
+
 								</div>
 								<div class="flex items-start justify-center gap-2 mt-4">
 									<input
