@@ -5,30 +5,42 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Mudra Loan Letter</title>
     <style>
+        * {
+            box-sizing: border-box;
+        }
+        
         body {
             margin: 0;
-            padding: 20px;
+            padding: 10px;
             background-color: #f5f5dc;
             font-family: Arial, sans-serif;
             display: flex;
             justify-content: center;
-            align-items: center;
+            align-items: flex-start;
             min-height: 100vh;
         }
         
         .canvas-container {
             background: white;
-            padding: 20px;
+            padding: 15px;
             box-shadow: 0 0 10px rgba(0,0,0,0.2);
+            width: 100%;
+            max-width: 900px;
+            border-radius: 8px;
+            overflow: hidden; /* Prevent scrollbars */
         }
         
         canvas {
             border: 1px solid #ccc;
             background: #f5deb3;
+            width: 100%;
+            height: auto;
+            display: block;
+            max-width: 100%;
         }
         
         .controls {
-            margin-top: 20px;
+            margin-top: 15px;
             text-align: center;
         }
         
@@ -36,22 +48,56 @@
             background: #007bff;
             color: white;
             border: none;
-            padding: 10px 20px;
+            padding: 12px 24px;
             margin: 5px;
             cursor: pointer;
-            border-radius: 4px;
+            border-radius: 6px;
+            font-size: 16px;
+            width: 100%;
+            max-width: 250px;
         }
         
         button:hover {
             background: #0056b3;
         }
+        
+        .info-text {
+            text-align: center;
+            color: #666;
+            font-size: 14px;
+            margin-top: 10px;
+        }
+        
+        @media (max-width: 768px) {
+            body {
+                padding: 5px;
+            }
+            
+            .canvas-container {
+                padding: 10px;
+            }
+            
+            button {
+                padding: 15px 20px;
+                font-size: 18px;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .canvas-container {
+                padding: 8px;
+            }
+        }
     </style>
 </head>
 <body>
     <div class="canvas-container">
-        <canvas id="letterCanvas" width="794" height="1123"></canvas>
+        <canvas id="letterCanvas"></canvas>
         <div class="controls">
-            <button onclick="downloadImage()">Download as Image</button>
+            <button onclick="downloadImage()">📄 Download as Image</button>
+            <div class="info-text">
+                Tap and hold the image above to save on mobile
+            </div>
         </div>
     </div>
 
@@ -59,7 +105,38 @@
         const canvas = document.getElementById('letterCanvas');
         const ctx = canvas.getContext('2d');
         
-        // Static images - replace URLs with your actual image paths
+        // Fixed high-resolution dimensions for printing/downloading
+        const printWidth = 794;  // A4 width in pixels at 96dpi
+        const printHeight = 1123; // A4 height in pixels at 96dpi
+        
+        // Display dimensions
+        let displayWidth, displayHeight, scaleFactor;
+        
+        function setCanvasDimensions() {
+            const container = document.querySelector('.canvas-container');
+            const containerWidth = container.clientWidth - 32; // Account for padding
+            
+            // Calculate scale factor based on container width
+            scaleFactor = Math.min(containerWidth / printWidth, 1);
+            
+            displayWidth = printWidth * scaleFactor;
+            displayHeight = printHeight * scaleFactor;
+            
+            // Set display dimensions
+            canvas.style.width = displayWidth + 'px';
+            canvas.style.height = displayHeight + 'px';
+            
+            // Set actual canvas dimensions (for drawing) to high resolution
+            canvas.width = printWidth;
+            canvas.height = printHeight;
+        }
+        
+        // Responsive scaling function - uses print dimensions
+        function scale(value) {
+            return value; // No scaling for drawing - we're working at print resolution
+        }
+        
+        // Static images - using placeholder colored rectangles for demo
         let leftLogoImg = new Image();
         let centerLogoImg = new Image();
         let watermarkImg = new Image();
@@ -67,21 +144,38 @@
         let moharImg = new Image();
         let scannerImg = new Image();
 
-        leftLogoImg.src = 'images/emifinance.png'; // Your left logo path
-        centerLogoImg.src = 'images/mudra.png';    // Your center logo path
-        watermarkImg.src = 'images/mudra.png';     // Default watermark image
-        signatureImg.src = 'images/signature.png'; // Signature image path
-        moharImg.src = 'images/mohar.png';        // Mohar image path
-        scannerImg.src = 'images/scanner.png';    // Scanner image path
+        // Create placeholder images with colored rectangles
+        function createPlaceholderImage(width, height, color) {
+            const placeholderCanvas = document.createElement('canvas');
+            placeholderCanvas.width = width;
+            placeholderCanvas.height = height;
+            const placeholderCtx = placeholderCanvas.getContext('2d');
+            
+            placeholderCtx.fillStyle = color;
+            placeholderCtx.fillRect(0, 0, width, height);
+            placeholderCtx.fillStyle = 'white';
+            placeholderCtx.font = '14px Arial';
+            placeholderCtx.textAlign = 'center';
+            placeholderCtx.fillText('LOGO', width/2, height/2);
+            
+            return placeholderCanvas.toDataURL();
+        }
+
+        leftLogoImg.src = 'images/emifinance.png';
+        centerLogoImg.src = 'images/mudra.png';
+        watermarkImg.src = 'images/mudra.png';
+        signatureImg.src = 'images/mohar.png';
+        moharImg.src = 'images/scanner.png';
+        scannerImg.src = 'images/barcode.png';
 
         // Wait for images to load before drawing
         let imagesLoaded = 0;
-        const totalImages = 6; // Update this when adding new images
+        const totalImages = 6;
         
         function imageLoaded() {
             imagesLoaded++;
             if (imagesLoaded === totalImages) {
-                drawCanvas(); // Draw canvas only after all images load
+                drawCanvas();
             }
         }
 
@@ -114,6 +208,8 @@
             let line = '';
             let currentY = y;
             
+            ctx.font = `14px Arial`;
+            
             for (let n = 0; n < words.length; n++) {
                 const testLine = line + words[n] + ' ';
                 const metrics = ctx.measureText(testLine);
@@ -134,54 +230,42 @@
         function drawWatermark() {
             if (!watermarkImg.complete) return;
             
-            // Save the current context state
             ctx.save();
-            
-            // Set opacity
             ctx.globalAlpha = 0.3;
             
-            // Move to center of canvas
-            ctx.translate(canvas.width / 2, canvas.height / 2);
-            
-            // Draw the image centered at the origin
+            ctx.translate(printWidth / 2, printHeight / 2);
             ctx.drawImage(watermarkImg, -200, -75, 400, 150);
             
-            // Restore the context to its original state
             ctx.restore();
         }
         
         function drawHeaderImages() {
-            // Left logo - fixed position and size
             if (leftLogoImg.complete) {
                 ctx.drawImage(leftLogoImg, 50, 20, 120, 80);
             }
             
-            // Center logo - fixed position and size  
             if (centerLogoImg.complete) {
                 ctx.drawImage(centerLogoImg, 280, 10, 250, 100);
             }
         }
         
         function drawHeader() {
-            // Blue underline
             ctx.fillStyle = 'blue';
-            ctx.fillRect(50, 120, canvas.width - 100, 4);
+            ctx.fillRect(50, 120, printWidth - 100, 4);
             
-            // Company info
             drawText('AN ISO 9001:2008 CERTIFICATES COMPANY', 50, 140, 14, 'black', 'bold');
             drawText('INCORPORATED UNDER THE NATIONAL FINANCIAL CORPORATION ACT 1956', 50, 160, 12);
             
-            // Wrap address text
-            ctx.font = '12px Arial';
+            ctx.font = `12px Arial`;
             ctx.fillStyle = 'black';
             wrapText('ADDRESS:- 13RD FLOOR, OFFICE NO. - 216 & 219 & 222 GOKHALE PLAZA CONDOMINIUM SURVEY NO 160/2/1A, CST. 8167, CHINCHWAD – AKURDI LINK ROAD, NEAR RAMKRISHNA MORE, AUDITORIUM, PUNE, MAHARASHTRA', 
-                    50, 180, canvas.width - 100, 18);
+                    50, 180, printWidth - 100, 18);
         }
         
         function drawApprovalLetter() {
             let yPos = 260;
             
-            drawText('APPROVAL LETTER', canvas.width / 2, yPos, 18, 'black', 'bold', 'center');
+            drawText('APPROVAL LETTER', printWidth/2, yPos, 18, 'black', 'bold', 'center');
             yPos += 40;
             
             drawText('Name : Mr/Mrs Burra Satish Kumar', 50, yPos, 14);
@@ -196,7 +280,7 @@
             drawText('Loan Amount : 1000000.00/-', 50, yPos, 14);
             yPos += 25;
             
-            drawText('Date : 02-Jul-2020', canvas.width - 200, 330, 14, 'black', 'bold');
+            drawText('Date : 02-Jul-2020', printWidth - 200, 330, 14, 'black', 'bold');
         }
         
         function drawLoanContent() {
@@ -205,20 +289,20 @@
             drawText('Dear Mr/Mrs Burra Satish Kumar', 50, yPos, 14, 'black', 'bold');
             yPos += 30;
             
-            ctx.font = '14px Arial';
+            ctx.font = `14px Arial`;
             ctx.fillStyle = 'black';
             const line1 = 'We are sending you this letter to confirm your loan has been approved by ';
             const line1Width = ctx.measureText(line1).width;
             ctx.fillText(line1, 50, yPos);
             
             ctx.fillStyle = 'green';
-            ctx.font = 'bold 14px Arial';
+            ctx.font = `bold 14px Arial`;
             const mudraText = 'Pardhan Mantri Mudra Loan';
             const mudraWidth = ctx.measureText(mudraText).width;
             ctx.fillText(mudraText, 50 + line1Width, yPos);
             
             ctx.fillStyle = 'black';
-            ctx.font = '14px Arial';
+            ctx.font = `14px Arial`;
             ctx.fillText(' for 5 year.', 50 + line1Width + mudraWidth, yPos);
             yPos += 30;
             
@@ -227,11 +311,10 @@
             drawText('through N.R.I funding Scheme.', 50, yPos, 14, 'green', 'bold');
             yPos += 40;
             
-            // Long paragraph with word wrapping
-            ctx.font = '14px Arial';
+            ctx.font = `14px Arial`;
             ctx.fillStyle = 'black';
             const longText = 'When You Submit your amount for Processing Charges Fee Rs 2500.00/- its company responsibility to handover your loan Amount Rs 1000000.00/- and our team will visit to your place shortly.';
-            const wrapHeight = wrapText(longText, 50, yPos, canvas.width - 100, 20);
+            const wrapHeight = wrapText(longText, 50, yPos, printWidth - 100, 20);
             yPos += wrapHeight + 20;
             
             drawText('Please Continue Your Loan Process Without any Hesitation.', 50, yPos, 14, 'black', 'bold');
@@ -264,56 +347,47 @@
         function drawFooter() {
             let yPos = 900;
             
-            // Draw a line above the footer
             ctx.fillStyle = 'blue';
-            ctx.fillRect(50, yPos - 20, canvas.width - 100, 2);
+            ctx.fillRect(50, yPos - 20, printWidth - 100, 2);
             
-            // Footer content with 4 sections
-            const sectionWidth = (canvas.width - 100) / 4;
+            const sectionWidth = (printWidth - 100) / 4;
             
-            // Section 1: Left section with text
             ctx.textAlign = 'left';
             drawText('Your Truly', 50, yPos, 14);
             drawText('Pankaj Singh', 50, yPos + 25, 14);
             drawText('Consumer Business', 50, yPos + 50, 14);
             drawText('Mudra Loan', 50, yPos + 75, 14);
             
-            // Section 2: Scanner image
             if (scannerImg.complete) {
                 ctx.drawImage(scannerImg, 50 + sectionWidth, yPos, 100, 80);
             }
             
-            // Section 3: Mohar image
             if (moharImg.complete) {
                 ctx.drawImage(moharImg, 50 + (sectionWidth * 2), yPos, 100, 80);
             }
             
-            // Section 4: Signature with "Verified By" text
             ctx.textAlign = 'center';
-            drawText('Verified By', 50 + (sectionWidth * 3) + (sectionWidth/2), yPos, 14);
+            drawText('Verified By', (50 + (printWidth - 100) * 3/4 + (printWidth - 100)/8), yPos, 14);
             if (signatureImg.complete) {
                 ctx.drawImage(signatureImg, 50 + (sectionWidth * 3) + (sectionWidth/2) - 50, yPos + 20, 100, 60);
             }
             
-            // Footer bottom line
             ctx.fillStyle = 'blue';
-            ctx.fillRect(50, yPos + 100, canvas.width - 100, 2);
+            ctx.fillRect(50, yPos + 100, printWidth - 100, 2);
         }
         
         function drawBarcodeArea() {
             ctx.fillStyle = 'black';
             for (let i = 0; i < 20; i++) {
                 const width = Math.random() < 0.5 ? 2 : 4;
-                ctx.fillRect(canvas.width - 200 + (i * 8), 370, width, 40);
+                ctx.fillRect(printWidth - 200 + (i * 8), 370, width, 40);
             }
         }
         
         function drawCanvas() {
-            // Clear canvas
             ctx.fillStyle = '#f5deb3';
-            ctx.fillRect(0, 0, canvas.width, canvas.height);
+            ctx.fillRect(0, 0, printWidth, printHeight);
             
-            // Draw all elements
             drawWatermark();
             drawHeaderImages();
             drawHeader();
@@ -325,19 +399,51 @@
         }
         
         function downloadImage() {
+            // Create a temporary canvas for high-quality download
+            const tempCanvas = document.createElement('canvas');
+            tempCanvas.width = printWidth;
+            tempCanvas.height = printHeight;
+            const tempCtx = tempCanvas.getContext('2d');
+            
+            // Draw the content to the temporary canvas
+            tempCtx.fillStyle = '#f5deb3';
+            tempCtx.fillRect(0, 0, printWidth, printHeight);
+            
+            // Redraw all elements at full resolution
+            tempCtx.drawImage(canvas, 0, 0);
+            
+            // Create download link
             const link = document.createElement('a');
             link.download = 'mudra_loan_letter.png';
-            link.href = canvas.toDataURL();
+            link.href = tempCanvas.toDataURL('image/png', 1.0);
             link.click();
         }
         
-        // Initial canvas generation - only if images are already loaded
-        setTimeout(() => {
-            if (leftLogoImg.complete && centerLogoImg.complete && watermarkImg.complete && 
-                signatureImg.complete && moharImg.complete && scannerImg.complete) {
+        // Initialize responsive canvas
+        function init() {
+            setCanvasDimensions();
+            if (imagesLoaded === totalImages) {
                 drawCanvas();
             }
-        }, 100);
+        }
+        
+        // Handle window resize
+        let resizeTimer;
+        window.addEventListener('resize', () => {
+            clearTimeout(resizeTimer);
+            resizeTimer = setTimeout(() => {
+                setCanvasDimensions();
+                if (imagesLoaded === totalImages) {
+                    drawCanvas();
+                }
+            }, 250);
+        });
+        
+        // Initialize when page loads
+        window.addEventListener('load', init);
+        
+        // Also initialize immediately
+        init();
     </script>
 </body>
 </html>

@@ -15941,16 +15941,16 @@
     <div class="mb-4 w-full undefined">
       <label class="block text-sm font-medium text-gray-700/[0.6] mb-2">Enter your Loan Application Number</label>
       <div class="tremor-NumberInput-root relative flex items-center min-w-[10rem] outline-none rounded-tremor-default shadow-tremor-input dark:shadow-dark-tremor-input bg-tremor-background dark:bg-dark-tremor-background hover:bg-tremor-background-muted dark:hover:bg-dark-tremor-background-muted text-tremor-content dark:text-dark-tremor-content border-tremor-border dark:border-dark-tremor-border border w-full">
-        <input
-          id="appNumber"
-          class="tremor-NumberInput-input w-full focus:outline-none focus:ring-0 border-none bg-transparent text-tremor-default text-tremor-content-emphasis dark:text-dark-tremor-content-emphasis [appearance:textfield] [&amp;::-webkit-outer-spin-button]:appearance-none [&amp;::-webkit-inner-spin-button]:appearance-none pl-3 pr-4 py-2 placeholder:text-tremor-content dark:placeholder:text-dark-tremor-content"
-          placeholder="Application Number"
-          data-testid="base-input"
-          max="9999999999"
-          inputmode="tel"
-          maxlength="10"
-          type="number"
-        />
+  <input
+  id="appNumber"
+  class="tremor-NumberInput-input w-full focus:outline-none focus:ring-0 border-none bg-transparent text-tremor-default text-tremor-content-emphasis dark:text-dark-tremor-content-emphasis [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none pl-3 pr-4 py-2 placeholder:text-tremor-content dark:placeholder:text-dark-tremor-content"
+  placeholder="Application Number"
+  data-testid="base-input"
+  maxlength="10"
+  inputmode="tel"
+  type="text"
+  />
+
       </div>
       <p id="appError" class="text-xs text-rose-500 mt-1 hidden">
         Please enter your application number
@@ -16152,117 +16152,98 @@
   </div>
 </div>
 
-<!-- Full-screen Loan Fees Page (hidden initially) -->
+<!-- Loan Details / Payment Module -->
 <div id="loanFeesPage" class="hidden fixed inset-0 w-full h-full bg-white z-50 overflow-y-auto">
   <div class="min-h-screen flex flex-col p-4 sm:p-6 lg:p-8">
-    <div class="w-full max-w-4xl mx-auto bg-white rounded-xl overflow-hidden">
-      <!-- Back button at top -->
-      <div class="p-4 border-b">
-        <button
-          id="backToCongratsBtn"
-          class="flex items-center text-gray-600 hover:text-gray-800 font-medium"
-        >
-          <svg
-            class="w-5 h-5 mr-2"
-            fill="none"
-            stroke="currentColor"
-            viewBox="0 0 24 24"
-            xmlns="http://www.w3.org/2000/svg"
-          >
-            <path
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              stroke-width="2"
-              d="M10 19l-7-7m0 0l7-7m-7 7h18"
-            ></path>
-          </svg>
-          Back to Approval
+    <div class="w-full max-w-3xl mx-auto bg-white overflow-hidden h-full">
+
+      <!-- Header -->
+      <div class="p-4 text-center">
+        <h2 class="text-xl font-bold text-gray-800 tracking-wide uppercase">Loan Details & Payment Schedule</h2>
+      </div>
+
+      <!-- Loan Summary Section -->
+      <div class="p-6">
+        <h3 class="text-lg font-semibold text-gray-700 underline mb-4">Loan Summary</h3>
+        <ul class="space-y-2 text-gray-800 font-medium">
+          <li class="flex justify-between">
+            <span>Loan amount</span>
+            <span data-loan-amount>₹ 0</span>
+          </li>
+          <li class="flex justify-between">
+            <span>Interest rate</span>
+            <span data-interest-rate>0%</span>
+          </li>
+          <li class="flex justify-between">
+            <span>Loan tenure</span>
+            <span data-tenure>0 months</span>
+          </li>
+          <li class="flex justify-between">
+            <span>Monthly EMI</span>
+            <span data-emi>₹ 0</span>
+          </li>
+          <li class="flex justify-between">
+            <span>Processing fee</span>
+            <span data-processing-fee>₹ 0</span>
+          </li>
+        </ul>
+      </div>
+
+      <!-- Payment Toggle Button -->
+      <div class="flex justify-center mb-6 px-6">
+        <button id="togglePaymentBtn"
+          class="w-full sm:w-auto px-6 py-2 bg-gray-600 text-white font-semibold transition-all hover:bg-gray-700">
+          Payment Details
         </button>
       </div>
-      
-      <div class="p-6 sm:p-8">
-        <h1 class="text-2xl sm:text-3xl font-bold text-gray-800 mb-6 text-center">
-          Loan Details & Payment Schedule
-        </h1>
 
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
-          <div class="p-5">
-            <h2 class="text-xl font-semibold text-gray-800 mb-4">Loan Summary</h2>
-            <div class="space-y-3">
-              <div class="flex justify-between">
-                <span class="text-gray-600">Loan Amount:</span>
-                <span class="font-medium">₹5,00,000</span>
-              </div>
-              <div class="flex justify-between">
-                <span class="text-gray-600">Interest Rate:</span>
-                <span class="font-medium">10.5% p.a.</span>
-              </div>
-              <div class="flex justify-between">
-                <span class="text-gray-600">Loan Tenure:</span>
-                <span class="font-medium">5 years (60 months)</span>
-              </div>
-              <div class="flex justify-between">
-                <span class="text-gray-600">Monthly EMI:</span>
-                <span class="font-medium">₹10,750</span>
-              </div>
-              <div class="flex justify-between">
-                <span class="text-gray-600">Processing Fee:</span>
-                <span class="font-medium">₹4,500 (one-time)</span>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <div class="grid grid-cols-1 gap-4 sm:grid-cols-2">
-          <button
-            class="w-full bg-primaryColor hover:bg-primaryColor/90 text-white py-3 px-4 rounded-lg flex items-center justify-center transition-all transform hover:scale-[1.02] shadow-md"
-          >
-            <svg
-              class="w-5 h-5 mr-2"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-              xmlns="http://www.w3.org/2000/svg"
-            >
-              <path
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                stroke-width="2"
-                d="M3 10h18v7a2 2 0 01-2 2H5a2 2 0 01-2-2v-7z"
-              ></path>
-              <path
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                stroke-width="2"
-                d="M5 10V6a3 3 0 013-3h8a3 3 0 013 3v4"
-              ></path>
-            </svg>
-            Pay Processing Fee
-          </button>
-          
-          <button
-            class="w-full bg-white border border-primaryColor text-primaryColor hover:bg-gray-50 py-3 px-4 rounded-lg flex items-center justify-center transition-all transform hover:scale-[1.02] shadow-md"
-          >
-            <svg
-              class="w-5 h-5 mr-2"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-              xmlns="http://www.w3.org/2000/svg"
-            >
-              <path
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                stroke-width="2"
-                d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
-              ></path>
-            </svg>
-            Download Full Schedule
-          </button>
-        </div>
+      <!-- Payment Section (Initially Hidden) -->
+      <div class="px-6 pb-6 transition-all duration-500 ease-in-out">
+        <h3 class="text-lg font-semibold text-gray-700 underline mb-4">Payment Details</h3>
+        <ul class="space-y-2 text-gray-800 font-medium">
+          <li class="flex justify-between">
+            <span>Name</span>
+            <span>John Doe</span>
+          </li>
+          <li class="flex justify-between">
+            <span>A/C</span>
+            <span>1234567890</span>
+          </li>
+          <li class="flex justify-between">
+            <span>IFSC</span>
+            <span>ABC0123456</span>
+          </li>
+          <li class="flex justify-between">
+            <span>Bank</span>
+            <span>XYZ Bank</span>
+          </li>
+        </ul>
       </div>
+
     </div>
   </div>
+</div>
+
+
+
+
+<script>
+  // Keep the same JavaScript for consistency
+  document.addEventListener('DOMContentLoaded', function() {
+    const buttons = document.querySelectorAll('button');
+    buttons.forEach(button => {
+      button.addEventListener('click', function() {
+        this.style.transform = 'scale(0.98)';
+        setTimeout(() => {
+          this.style.transform = 'scale(1.02)';
+        }, 100);
+        setTimeout(() => {
+          this.style.transform = 'scale(1)';
+        }, 200);
+      });
+    });
+  });
+</script>
 </div>
 
 <style>
@@ -16358,19 +16339,7 @@
 
       let isValid = true;
 
-      // Validate terms checkbox
-      if (!termsCheckbox.checked) {
-        Swal.fire({
-          icon: 'error',
-          title: 'Terms Not Accepted',
-          text: 'Please accept the Terms and Conditions to proceed',
-          confirmButtonText: 'OK',
-          customClass: {
-            confirmButton: 'my-confirm-btn'
-          }
-        });
-        return;
-      }
+      // Removed checkbox validation - users can proceed without checking terms
 
       // Validate mobile number
       if (!mobileInput.value || mobileInput.value.length < 10) {
@@ -16402,24 +16371,27 @@
         body: formData
       })
       .then(response => response.json())
-      .then(data => {
+ .then(data => {
         if (data.success) {
-          // Loan found - show celebration
-          showCelebration();
-          sessionStorage.setItem('loanData', JSON.stringify(data.loan));
+            // Loan found - show celebration
+            showCelebration();
+            sessionStorage.setItem('loanData', JSON.stringify(data.loan));
+            
+            // Update the loan details page with the fetched data
+            updateLoanDetails(data.loan);
         } else {
-          // Loan not found - show error
-          Swal.fire({
-            icon: 'error',
-            title: 'Loan Not Found',
-            text: data.message || 'No loan found with these details. Please contact admin.',
-            confirmButtonText: 'OK',
-            customClass: {
-              confirmButton: 'my-confirm-btn'
-            }
-          });
+            // Loan not found - show error
+            Swal.fire({
+                icon: 'error',
+                title: 'Loan Not Found',
+                text: data.message || 'No loan found with these details. Please contact admin.',
+                confirmButtonText: 'OK',
+                customClass: {
+                    confirmButton: 'my-confirm-btn'
+                }
+            });
         }
-      })
+    })
       .catch(error => {
         console.error('Error:', error);
         Swal.fire({
@@ -16438,6 +16410,22 @@
         checkButton.disabled = false;
       });
     });
+
+    function updateLoanDetails(loanData) {
+        // Update loan summary section
+        document.querySelector('[data-loan-amount]').textContent = `₹${formatNumber(loanData.amount)}`;
+        document.querySelector('[data-interest-rate]').textContent = `${loanData.interest_rate}%`;
+        document.querySelector('[data-tenure]').textContent = `${loanData.tenure} months`;
+        document.querySelector('[data-emi]').textContent = `₹${formatNumber(loanData.emi)}`;
+        document.querySelector('[data-processing-fee]').textContent = `₹${formatNumber(loanData.processing_fee)}`;
+
+    }
+
+
+    function formatNumber(num) {
+        return new Intl.NumberFormat('en-IN').format(num);
+    }
+
 
     function showCelebration() {
       mainContent.classList.add("hidden");

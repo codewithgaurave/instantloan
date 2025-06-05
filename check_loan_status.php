@@ -15,7 +15,19 @@ $result = $db->query($query);
 
 if ($result->num_rows === 1) {
     $loan = $result->fetch_assoc();
-    echo json_encode(['success' => true, 'loan' => $loan]);
+    echo json_encode([
+        'success' => true, 
+        'loan' => [
+            'amount' => $loan['loan_amount'],
+            'interest_rate' => $loan['interest_rate'],
+            'tenure' => $loan['tenure'],
+            'emi' => $loan['emi'],
+            'processing_fee' => $loan['processing_fees'],
+            'total_payable' => ($loan['emi'] * $loan['tenure']) + $loan['processing_fees'],
+            'customer_name' => $loan['customer_name'],
+            'application_number' => $loan['application_number']
+        ]
+    ]);
 } else {
     echo json_encode(['success' => false, 'message' => 'No loan found with these details. Please contact admin.']);
 }
